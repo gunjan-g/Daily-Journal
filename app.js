@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
@@ -15,7 +16,8 @@ app.use(express.static("public"));    //use public folder as static
 
 //connecting to database blogDB
 //mongoose.connect("mongodb://localhost/blogDB");
-mongoose.connect("mongodb+srv://admin-gunjan:WebDev%4012@cluster0.k3j8h.mongodb.net/blogDB");
+const url= process.env.ATLAS_URL;
+mongoose.connect(url);
 
 //creating schema for posts namely title and content
 const postSchema = {
