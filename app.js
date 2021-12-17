@@ -14,7 +14,8 @@ app.use(bodyParser.urlencoded());
 app.use(express.static("public"));    //use public folder as static
 
 //connecting to database blogDB
-mongoose.connect("mongodb://localhost/blogDB");
+//mongoose.connect("mongodb://localhost/blogDB");
+mongoose.connect("mongodb+srv://admin-gunjan:WebDev%4012@cluster0.k3j8h.mongodb.net/blogDB");
 
 //creating schema for posts namely title and content
 const postSchema = {
