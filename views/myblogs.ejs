@@ -1,0 +1,29 @@
+<%- include("partials/header"); -%>
+
+<div class="container">
+
+    <h1 style="text-align: center;">MY NOTES</h1>
+    <h3 style="text-align:center; color: grey;"> <%= startingContent %> </h3>
+    <div style="text-align: center; margin-top: 3rem;">
+      <img src="https://user-images.githubusercontent.com/81305824/145872084-129355ec-700c-44bd-9fc8-db8d8afafc1c.png">
+    </div>
+    <br>
+    <br>
+
+  <!-- iterating over posts and for each post, which is an object-->
+  <%  posts.forEach(function(post){ %>
+    
+    <!-- Display post title -->
+    <h1 class="titlepost"><i class="fas fa-pen-square"></i>&nbsp;<%=post.title%></h1>
+    <p>
+      <!-- Only display 0 to 100 word in string -->
+      <%=post.content.substring(0, 100) + " ..."%>
+
+      <!-- Move to new href with post id as new address -->
+      <a href="/posts/<%=post._id%>">Read More</a>
+    </p>
+
+    <% }) %>
+
+    <%- include("partials/footer"); -%>
+
