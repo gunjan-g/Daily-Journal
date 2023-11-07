@@ -81,14 +81,16 @@ p{
   padding: 2rem;
   text-align: center;
   width: 100%;
-  background-color: #e7b50e; 
-  color: white;
+  height: 45rem;
+  background-color: white; 
+  color: #EA2C62;
 }
 
 .join{
   padding: 2rem;
   text-align: center;
   width: 100%;
+  height: 50rem;
   background-color: #EA2C62;
   color: white;
 }
