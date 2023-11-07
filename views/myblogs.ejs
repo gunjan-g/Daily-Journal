@@ -1,29 +1,22 @@
 <%- include("partials/header"); -%>
 
-<div class="container">
+    <div class="decisionbox">
+        <h1 style="color: #F2789F;">Do you want to write new note?</h1>
 
-    <h1 style="text-align: center;">MY NOTES</h1>
-    <h3 style="text-align:center; color: grey;"> <%= startingContent %> </h3>
-    <div style="text-align: center; margin-top: 3rem;">
-      <img src="https://user-images.githubusercontent.com/81305824/145872084-129355ec-700c-44bd-9fc8-db8d8afafc1c.png">
+        <div class="image">
+            <img src="https://github.com/gunjan-g/power_she_pre/assets/81305824/9838c0cb-6d74-4dd5-bd31-d49a9586f25c" height="300px" width="300px">
+        </div>
+
+        <br>
+        <br>
+        <a href="/compose">
+        <button type="submit" class="btn btn-danger">Yes</button>
+        </a> &nbsp; &nbsp;
+        <a href="/mynotes">
+            <button type="submit" class="btn btn-danger">No</button>
+            </a>
+        <br>
     </div>
-    <br>
-    <br>
 
-  <!-- iterating over posts and for each post, which is an object-->
-  <%  posts.forEach(function(post){ %>
-    
-    <!-- Display post title -->
-    <h1 class="titlepost"><i class="fas fa-pen-square"></i>&nbsp;<%=post.title%></h1>
-    <p>
-      <!-- Only display 0 to 100 word in string -->
-      <%=post.content.substring(0, 100) + " ..."%>
 
-      <!-- Move to new href with post id as new address -->
-      <a href="/posts/<%=post._id%>">Read More</a>
-    </p>
-
-    <% }) %>
-
-    <%- include("partials/footer"); -%>
-
+<%- include("partials/footer"); -%>

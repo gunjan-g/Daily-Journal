@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require('mongoose');
+const validator = require('email-validator');
 
 const homeStartingContent = "Save the moments that matter! Pen down your ideas! We store your thoughts for free!";
 const aboutContent = "Whether you’re looking for a tool to record your daily emotions and activities in a reflective journal, keep track of milestones in a food diary or pregnancy journal, or even record your dreams in a dream journal, we have got you covered. We give you the tools you need to focus on the ideas you want to preserve, rather than the process of writing itself.";
@@ -17,7 +18,17 @@ app.use(express.static("public"));    //use public folder as static
 //connecting to database blogDB
 //mongoose.connect("mongodb://localhost/blogDB");
 const url= process.env.ATLAS_URL;
-mongoose.connect(url);
+mongoose.connect(url, {
+  useNewUrlParser: true,
+});
+
+// mongoose.connection.on("connected", () => {
+//   console.log("Connected to MongoDB!");
+// });
+
+mongoose.connection.on("error", (err) => {
+  console.log('Error connecting to mongodb', err);
+});
 
 //creating schema for posts namely title and content
 const postSchema = {
@@ -57,55 +68,84 @@ app.get("/login",function(req,res){
 });
 
 app.post("/register",function(req,res){
-  const newUser= new User({
-    email: req.body.username,
-    password: req.body.password
-  })
-  newUser.save(function(err){
-    if(err){
-      console.log(err);
-    }else{
-      res.render("index");
-    }
-  });
+  const email= req.body.username;
+  
+  if (!email) {
+    return res.send("Email is required");
+  }
+
+  const isValid = validator.validate(email);
+
+  if (!isValid) {
+    return res.send("Email is not valid");
+  }
+  else {
+    const newUser= new User({
+      email: req.body.username,
+      password: req.body.password
+    })
+    newUser.save(function(err){
+      if(err){
+        console.log(err);
+      }else{
+        res.render("index");
+      }
+    });
+  }
 })
 
 app.post("/login",function(req,res){
   const username= req.body.username;
   const password= req.body.password;
 
-  User.findOne({email: username},function(err,foundUser){
-    if(err){
-      console.log(err);
-    }else{
-      if(foundUser){
-        if(foundUser.password===password){
-          res.render("index");
+  if (!username) {
+    return res.send("Email is required");
+  }
+
+  const isValid = validator.validate(username);
+
+  if (!isValid) {
+    return res.send("Email is not valid");
+  }
+  else{
+    User.findOne({email: username},function(err,foundUser){
+      if(err){
+        console.log(err);
+      }else{
+        if(foundUser){
+          if(foundUser.password===password){
+            res.render("index");
+          }
+          else{
+            res.send("Wrong Password!");
+          }
         }
         else{
-          res.send("Wrong Password!");
+          res.send("OOPS! You're not registered. Register first!");
         }
       }
-      else{
-        res.send("OOPS! You're not registered. Register first!");
-      }
-    }
-  })
+    })
+  }
 });
 
 app.get("/index",function(req,res){
   res.render("index");
 });
 
-app.get("/myblogs", function(req, res){
+app.get("/mynotes", function(req, res){
   //find all posts and posts are given at result
   Post.find({}, function(err, posts){
-    //render myblogs.ejs view with starting content as constant defined above and posts from database
-    res.render("myblogs", {
+    //render mynotes.ejs view with starting content as constant defined above and posts from database
+    res.render("mynotes", {
       startingContent: homeStartingContent,
       posts: posts
       });
   });
+});
+
+app.get("/myblogs", function(req, res){
+  //render compose view
+  res.render("myblogs");
 });
 
 //if we want to compose posts
@@ -122,10 +162,10 @@ app.post("/compose", function(req, res){
     content: req.body.postBody
   });
 
-  //if there is no error in saving posts, then redirect to myblogs
+  //if there is no error in saving posts, then redirect to mynotes
   post.save(function(err){
     if (!err){
-        res.redirect("/myblogs");
+        res.redirect("/mynotes");
     }
   });
 });
@@ -199,6 +239,6 @@ app.get("/todolist", function(req, res) {
       port = 8000;
     }
 
-app.listen(port, function() {
+app.listen(port, () => {
   console.log("Server started on port 8000");
 });
